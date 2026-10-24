@@ -1,0 +1,246 @@
+{
+  "version": 1,
+  "updatedAt": "2026-10-21T09:00:00.000Z",
+  "posts": {
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000000098495/": {
+      "postType": "Launch",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000000161977/": {
+      "postType": "System Reframe",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000000211170/": {
+      "postType": "System Reframe",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000000221465/": {
+      "postType": "Pattern Naming",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000000293427/": {
+      "postType": "Framework",
+      "persona": "Quiet Fixer"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000000376664/": {
+      "postType": "Myth-Busting",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000000453679/": {
+      "postType": "Myth-Busting",
+      "persona": "Quiet Fixer"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000000484910/": {
+      "postType": "Framework",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000000486379/": {
+      "postType": "System Reframe",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000000550261/": {
+      "postType": "System Reframe",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000000559704/": {
+      "postType": "Pattern Naming",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000000617046/": {
+      "postType": "Personal Story",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000000618082/": {
+      "postType": "Launch",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000000644637/": {
+      "postType": "Myth-Busting",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000000723691/": {
+      "postType": "Myth-Busting",
+      "persona": "Quiet Fixer"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000000781508/": {
+      "postType": "Launch",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000000937095/": {
+      "postType": "System Reframe",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000000972561/": {
+      "postType": "Launch",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000001009550/": {
+      "postType": "Pattern Naming",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000001093301/": {
+      "postType": "System Reframe",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000001177594/": {
+      "postType": "Pattern Naming",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000001222739/": {
+      "postType": "System Reframe",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000001231588/": {
+      "postType": "Launch",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000001241536/": {
+      "postType": "Personal Story",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000001297623/": {
+      "postType": "System Reframe",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000001351737/": {
+      "postType": "Framework",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000001479710/": {
+      "postType": "Personal Story",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000001550256/": {
+      "postType": "Framework",
+      "persona": "Quiet Fixer"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000001641598/": {
+      "postType": "Personal Story",
+      "persona": "Quiet Fixer"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000001699502/": {
+      "postType": "Personal Story",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000001770764/": {
+      "postType": "Pattern Naming",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000001782089/": {
+      "postType": "Pattern Naming",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000001821481/": {
+      "postType": "Framework",
+      "persona": "Quiet Fixer"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000001875223/": {
+      "postType": "System Reframe",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000001877567/": {
+      "postType": "Myth-Busting",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000001923988/": {
+      "postType": "Pattern Naming",
+      "persona": "Quiet Fixer"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000002095483/": {
+      "postType": "Myth-Busting",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000002147192/": {
+      "postType": "Myth-Busting",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000002221225/": {
+      "postType": "Personal Story",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000002313192/": {
+      "postType": "Launch",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000002344305/": {
+      "postType": "System Reframe",
+      "persona": "Quiet Fixer"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000002371191/": {
+      "postType": "Framework",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000002379542/": {
+      "postType": "Myth-Busting",
+      "persona": "Quiet Fixer"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000002464241/": {
+      "postType": "Pattern Naming",
+      "persona": "Quiet Fixer"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000002533264/": {
+      "postType": "Personal Story",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000002545352/": {
+      "postType": "System Reframe",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000002621435/": {
+      "postType": "Framework",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000002697536/": {
+      "postType": "Myth-Busting",
+      "persona": "Quiet Fixer"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000002773026/": {
+      "postType": "Framework",
+      "persona": "Quiet Fixer"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000002808164/": {
+      "postType": "Pattern Naming",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000002897415/": {
+      "postType": "Personal Story",
+      "persona": "Quiet Fixer"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000002936169/": {
+      "postType": "Framework",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000002988132/": {
+      "postType": "Personal Story",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000003064595/": {
+      "postType": "System Reframe",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000003103810/": {
+      "postType": "Pattern Naming",
+      "persona": "Scope Sponge"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000003142858/": {
+      "postType": "Personal Story",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000003178971/": {
+      "postType": "Myth-Busting",
+      "persona": "Quiet Fixer"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000003249476/": {
+      "postType": "Pattern Naming",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000003283327/": {
+      "postType": "Personal Story",
+      "persona": "Overlooked Expert"
+    },
+    "https://www.linkedin.com/feed/update/urn:li:activity:7380000000003365812/": {
+      "postType": "Myth-Busting",
+      "persona": "Quiet Fixer"
+    }
+  }
+}

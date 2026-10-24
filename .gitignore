@@ -1,0 +1,9 @@
+# Never commit real analytics data
+data/
+*.xlsx
+!public/sample/*.xlsx
+
+node_modules/
+dist/
+.DS_Store
+*.log
