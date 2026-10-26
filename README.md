@@ -18,6 +18,7 @@ Everything runs in your web browser. Your files are never uploaded anywhere. The
 4. In the top right, pick a **date range** (for example, the past 90 days or past year).
 5. Click **Export**. LinkedIn downloads a file named something like `Content_2026-07-01_2026-09-30_JenniferWright.xlsx`.
 6. Keep that file somewhere handy, for example in a folder called `data` next to this project. Files in `data/` and any .xlsx file are never added to the code repository.
+7. LinkedIn caps each export at 50 top posts. To cover more, export several date ranges and drop all the files onto the dashboard at once. They are combined and duplicate posts are removed.
 
 The export usually has five sheets: Discovery, Engagement, Top Posts, Followers, and Demographics. The dashboard looks for each one by name and by its column headings. If LinkedIn renames or drops a sheet, you get a message on screen and that section is skipped rather than breaking everything.
 
@@ -43,7 +44,11 @@ Only rows where **Platform** is LinkedIn and **Status** is Published are used. T
 | Impressions, Reactions, Comments, Reposts, Saves, New Followers | Used only when the LinkedIn export does not have the number. |
 | Post Type, Persona | Not in the calendar today. If you add these columns later, they are picked up as starting tags. |
 
-Every other column is ignored. Calendar rows that could not be matched to a LinkedIn post are listed at the bottom of the dashboard so you can fix the link or date in Notion.
+Every other column is ignored.
+
+Every published LinkedIn row in the calendar is shown, even when the LinkedIn export does not include that post. Those posts use the numbers you logged in Notion and carry a "Notion numbers" label. They are also listed at the bottom of the dashboard so you can check the link or date, or load the export that covers them.
+
+Matching works in this order: the same link, the same post ID inside the link, then the Publication Date. When two posts share a date, the Name is compared with the words in each LinkedIn link to pick the right one.
 
 ## Step 3: Open the dashboard
 

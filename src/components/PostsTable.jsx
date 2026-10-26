@@ -21,7 +21,8 @@ function cell(p, key) {
   switch (key) {
     case 'hook': return (
       <span>
-        <a href={p.url} target="_blank" rel="noreferrer">{p.hook || 'Open post'}</a>
+        {p.url ? <a href={p.url} target="_blank" rel="noreferrer">{p.hook || 'Open post'}</a> : <span>{p.hook || 'Untitled post'}</span>}
+        {p.source === 'calendar' && <span className="badge brand" title="This post was not in the LinkedIn export. Its numbers come from your Notion calendar.">Notion numbers</span>}
         {p.hook && p.hook.length > HOOK_LIMIT && <span className="badge warn">{p.hook.length} chars</span>}
         {!p.hook && <span className="badge">no hook, not in calendar</span>}
       </span>

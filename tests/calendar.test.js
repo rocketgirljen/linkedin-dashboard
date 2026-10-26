@@ -26,6 +26,8 @@ describe('calendar CSV parsing', () => {
   it('strips Notion links from pillars', () => {
     expect(cal.posts[0].pillars).toEqual(['Visibility', 'Scope Control']);
     expect(stripNotionLinks('Solo (https://www.notion.so/x)')).toEqual(['Solo']);
+    expect(stripNotionLinks('Visibility (https://app.notion.com/p/1a2b3c), Scope Control (https://app.notion.com/p/4d5e)')).toEqual(['Visibility', 'Scope Control']);
+    expect(stripNotionLinks('Plain name')).toEqual(['Plain name']);
     expect(stripNotionLinks('')).toEqual([]);
   });
 
@@ -86,20 +88,104 @@ describe('matching calendar rows to export posts', () => {
     expect(p.date.getHours()).toBe(8);
   });
 
-  it('lists calendar rows that could not be matched', () => {
+  it('keeps calendar rows that could not be matched as calendar-only posts', () => {
     expect(unmatchedCalendar).toHaveLength(1);
     expect(unmatchedCalendar[0].name).toBe('Orphan post');
     expect(unmatchedCalendar[0].matchProblem).toMatch(/No LinkedIn post/);
+    expect(posts).toHaveLength(3);
+    const orphan = posts.find((p) => p.hook === 'Orphan post');
+    expect(orphan.source).toBe('calendar');
+    expect(orphan.contentType).toBe('Poll');
+    expect(orphan.urlKey).toMatch(/^calendar:2026-07-09:/);
   });
 
-  it('does not guess when two export posts share a date', () => {
-    const twoSameDay = [
-      { url: 'https://l/1', urlKey: 'l/1', date: new Date(2026, 6, 5) },
-      { url: 'https://l/2', urlKey: 'l/2', date: new Date(2026, 6, 5) },
+  it('uses Notion numbers for calendar-only posts', () => {
+    const res = matchPosts([], [{ name: 'Solo', date: new Date(2026, 6, 9), url: 'https://www.linkedin.com/feed/update/urn:li:activity:9/', urlKey: 'linkedin.com/feed/update/urn:li:activity:9', manual: { impressions: 1200, reactions: 30, comments: 4, reposts: 1 } }]);
+    const p = res.posts[0];
+    expect(p.impressions).toBe(1200);
+    expect(p.comments).toBe(4);
+    expect(p.metricSources.impressions).toBe('calendar');
+    expect(p.urlKey).toBe('linkedin.com/feed/update/urn:li:activity:9');
+  });
+
+  it('matches on the shared numeric post ID when URL formats differ', () => {
+    const li = [{ url: 'https://www.linkedin.com/posts/jennifer-wright_scope-sponge-activity-7380000000000000001-AbCd', urlKey: 'linkedin.com/posts/jennifer-wright_scope-sponge-activity-7380000000000000001-abcd', date: new Date(2026, 6, 5) }];
+    const res = matchPosts(li, [{ name: 'Scope sponge', date: new Date(2026, 6, 6), url: 'https://www.linkedin.com/feed/update/urn:li:activity:7380000000000000001/', urlKey: 'linkedin.com/feed/update/urn:li:activity:7380000000000000001', manual: {} }]);
+    expect(res.posts[0].matchMethod).toBe('id');
+    expect(res.unmatchedCalendar).toHaveLength(0);
+  });
+
+  it('uses the hook against the URL slug when two export posts share a date', () => {
+    const day = new Date(2026, 6, 5);
+    const li = [
+      { url: 'https://www.linkedin.com/posts/jennifer-wright_hard-work-does-not-speak-for-itself-share-7380000000000000001-AbCd', urlKey: 'a', date: day },
+      { url: 'https://www.linkedin.com/posts/jennifer-wright_three-questions-before-you-say-yes-share-7380000000000000002-EfGh', urlKey: 'b', date: day },
     ];
-    const res = matchPosts(twoSameDay, [{ name: 'A', date: new Date(2026, 6, 5), urlKey: '', manual: {} }]);
+    const cal = [
+      { name: '3 questions to ask before you say yes to more scope.', date: day, url: 'https://www.linkedin.com/feed/update/urn:li:activity:7380000000000000999/', urlKey: 'x', manual: {} },
+      { name: 'Hard work does not speak for itself. It never did.', date: day, url: '', urlKey: '', manual: {} },
+    ];
+    const res = matchPosts(li, cal);
+    expect(res.posts.find((p) => p.urlKey === 'b').hook).toMatch(/^3 questions/);
+    expect(res.posts.find((p) => p.urlKey === 'a').hook).toMatch(/^Hard work/);
+    expect(res.posts.find((p) => p.urlKey === 'b').matchMethod).toBe('hook');
+    expect(res.unmatchedCalendar).toHaveLength(0);
+  });
+
+  it('keeps the row as calendar-only when several posts share a date and no slug fits', () => {
+    const twoSameDay = [
+      { url: 'https://www.linkedin.com/feed/update/urn:li:share:1/', urlKey: 'l/1', date: new Date(2026, 6, 5) },
+      { url: 'https://www.linkedin.com/feed/update/urn:li:share:2/', urlKey: 'l/2', date: new Date(2026, 6, 5) },
+    ];
+    const res = matchPosts(twoSameDay, [{ name: 'A hook', date: new Date(2026, 6, 5), urlKey: '', manual: {} }]);
     expect(res.unmatchedCalendar).toHaveLength(1);
     expect(res.unmatchedCalendar[0].matchProblem).toMatch(/Several LinkedIn posts/);
+    expect(res.posts).toHaveLength(3);
+  });
+});
+
+describe('a 50-post export against a larger calendar', () => {
+  // Mirrors the real situation: LinkedIn caps Top Posts at 50, the calendar
+  // has 149 published posts, export links use share IDs and the calendar uses
+  // activity IDs, so only dates and hooks can join them.
+  const start = new Date(2026, 0, 5);
+  const calendar = [];
+  const exportPosts = [];
+  for (let i = 0; i < 149; i++) {
+    const date = new Date(start.getTime() + Math.floor(i / 2) * 86400000); // two posts most days
+    const name = `Post number ${i} about ${['visibility', 'scope', 'promotion', 'feedback'][i % 4]} and ${['teams', 'managers', 'careers'][i % 3]}`;
+    const activity = `7380000000000${String(100000 + i)}`;
+    calendar.push({
+      name,
+      date,
+      hasTime: false,
+      url: `https://www.linkedin.com/feed/update/urn:li:activity:${activity}/`,
+      urlKey: `linkedin.com/feed/update/urn:li:activity:${activity}`,
+      contentType: 'Text Only',
+      funnel: 'Awareness',
+      pillars: ['Visibility'],
+      manual: { impressions: 1000 + i, reactions: 10, comments: 2, reposts: 1 },
+    });
+    if (i >= 99) {
+      // Only the newest 50 made it into the export, under share IDs with slugs.
+      const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      const url = `https://www.linkedin.com/posts/jennifer-wright_${slug}-share-7390000000000${String(100000 + i)}-AbCd`;
+      exportPosts.push({ url, urlKey: url.replace(/^https:\/\/www\./, '').toLowerCase(), date, impressions: 5000 + i, engagements: 100 });
+    }
+  }
+
+  it('includes every calendar post and matches the 50 exported ones', () => {
+    const res = matchPosts(exportPosts, calendar.map((c) => ({ ...c })));
+    expect(res.posts).toHaveLength(149);
+    const hooks = new Set(res.posts.map((p) => p.hook));
+    for (const c of calendar) expect(hooks.has(c.name)).toBe(true);
+    const fromLinkedin = res.posts.filter((p) => p.source === 'linkedin');
+    expect(fromLinkedin).toHaveLength(50);
+    expect(fromLinkedin.every((p) => p.calendar)).toBe(true);
+    expect(fromLinkedin.every((p) => p.metricSources.impressions === 'linkedin')).toBe(true);
+    expect(res.unmatchedCalendar).toHaveLength(99);
+    expect(res.posts.filter((p) => p.source === 'calendar').every((p) => p.metricSources.impressions === 'calendar')).toBe(true);
+    expect(res.unmatchedLinkedin).toHaveLength(0);
   });
 });
 
