@@ -390,6 +390,61 @@ export function parseWorkbook(workbook) {
   };
 }
 
+// Combine several exports (each caps Top Posts at 50). Posts are de-duplicated
+// by URL, and for each duplicate the entry with more data wins.
+export function mergeExports(results) {
+  if (!results.length) return null;
+  if (results.length === 1) return results[0];
+  const posts = new Map();
+  const score = (p) => Object.values(p).filter((v) => v != null).length;
+  for (const r of results) {
+    for (const p of r.posts) {
+      const existing = posts.get(p.urlKey);
+      if (!existing) { posts.set(p.urlKey, { ...p }); continue; }
+      // Keep the richer record and fill its gaps from the other one.
+      const [keep, other] = score(p) > score(existing) ? [{ ...p }, existing] : [existing, p];
+      for (const [k, v] of Object.entries(other)) if (keep[k] == null && v != null) keep[k] = v;
+      posts.set(p.urlKey, keep);
+    }
+  }
+  const byDate = (lists, key) => {
+    const map = new Map();
+    for (const list of lists) for (const row of list || []) {
+      const k = row.date.toDateString();
+      const prev = map.get(k);
+      if (!prev || (row[key] || 0) > (prev[key] || 0)) map.set(k, row);
+    }
+    return [...map.values()].sort((a, b) => a.date - b.date);
+  };
+  const engagement = results.some((r) => r.engagement) ? byDate(results.map((r) => r.engagement), 'impressions') : null;
+  let followers = results.some((r) => r.followers) ? byDate(results.map((r) => r.followers), 'newFollowers') : null;
+  if (followers) {
+    let running = 0;
+    for (const f of followers) { running = f.totalFollowers != null ? f.totalFollowers : running + (f.newFollowers || 0); f.cumulativeNew = running; }
+  }
+  const withDemo = results.filter((r) => r.demographics && Object.keys(r.demographics).length);
+  const withDisc = results.filter((r) => r.discovery && r.discovery.impressions != null).sort((a, b) => b.discovery.impressions - a.discovery.impressions);
+  const allLabels = ['Discovery', 'Engagement', 'Top Posts', 'Followers', 'Demographics'];
+  const missing = allLabels.filter((l) => results.every((r) => r.missingSheets.includes(l)));
+  const notes = [...new Set(results.flatMap((r) => r.notes))];
+  const list = [...posts.values()].sort((a, b) => (b.date?.getTime() || 0) - (a.date?.getTime() || 0));
+  const totalIn = results.reduce((a, r) => a + r.posts.length, 0);
+  if (totalIn > list.length) notes.push(`${results.length} exports were combined: ${totalIn} post rows became ${list.length} unique posts.`);
+  return {
+    sheetNames: [...new Set(results.flatMap((r) => r.sheetNames))],
+    foundSheets: Object.assign({}, ...results.map((r) => r.foundSheets)),
+    missingSheets: missing,
+    notes,
+    discovery: withDisc[0]?.discovery || results.find((r) => r.discovery)?.discovery || null,
+    engagement,
+    posts: list,
+    hasPerPostBreakdown: results.some((r) => r.hasPerPostBreakdown),
+    followers,
+    demographics: withDemo[withDemo.length - 1]?.demographics || null,
+    fileCount: results.length,
+  };
+}
+
 export function parseXlsxBuffer(buffer) {
   const workbook = XLSX.read(buffer, { type: 'array', cellDates: true });
   return parseWorkbook(workbook);

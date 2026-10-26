@@ -102,7 +102,7 @@ export default function HookAnalysis({ posts }) {
               <tbody>
                 {over.sort((a, b) => b.hookLength - a.hookLength).map((p) => (
                   <tr key={p.urlKey}>
-                    <td className="hook-cell"><a href={p.url} target="_blank" rel="noreferrer">{p.hook}</a></td>
+                    <td className="hook-cell">{p.url ? <a href={p.url} target="_blank" rel="noreferrer">{p.hook}</a> : p.hook}</td>
                     <td className="num">{p.hookLength}<span className="badge warn">+{p.hookLength - HOOK_LIMIT}</span></td>
                     <td className="num">{formatPercent(p.engagementRate)}</td>
                     <td className="num">{formatNumber(p.impressions)}</td>

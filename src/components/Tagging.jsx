@@ -32,7 +32,10 @@ export default function Tagging({ posts, onTag, onDownload, onClear, unmatchedCa
           <tbody>
             {list.map((p) => (
               <tr key={p.urlKey}>
-                <td className="hook-cell"><a href={p.url} target="_blank" rel="noreferrer">{p.hook || p.url.replace(/^https?:\/\/(www\.)?/, '')}</a></td>
+                <td className="hook-cell">
+                  {p.url ? <a href={p.url} target="_blank" rel="noreferrer">{p.hook || p.url.replace(/^https?:\/\/(www\.)?/, '')}</a> : <span>{p.hook || 'Untitled post'}</span>}
+                  {p.source === 'calendar' && <span className="badge brand">Notion numbers</span>}
+                </td>
                 <td style={{ whiteSpace: 'nowrap' }}>{formatShortDate(p.date)}</td>
                 <td className="num">{formatNumber(p.impressions)}</td>
                 <td>
@@ -56,10 +59,10 @@ export default function Tagging({ posts, onTag, onDownload, onClear, unmatchedCa
 
       {calendarLoaded && (
         <div style={{ marginTop: 20 }}>
-          <h3>Calendar rows that did not match a LinkedIn post ({unmatchedCalendar.length})</h3>
+          <h3>Calendar posts not found in the LinkedIn export ({unmatchedCalendar.length})</h3>
           {unmatchedCalendar.length ? (
             <>
-              <p className="muted small">Fix these in Notion by pasting the Live Post Link, or check the Publication Date. Then re-export the CSV.</p>
+              <p className="muted small">These posts are still included, using the numbers you logged in Notion. If a post should have matched, check its Live Post Link and Publication Date in Notion, or load the LinkedIn export that covers its date.</p>
               <div className="table-wrap">
                 <table>
                   <thead><tr><th>Name</th><th>Publication Date</th><th>Live Post Link</th><th>Why</th></tr></thead>
@@ -76,7 +79,7 @@ export default function Tagging({ posts, onTag, onDownload, onClear, unmatchedCa
                 </table>
               </div>
             </>
-          ) : <p className="muted small">Every published LinkedIn row in the calendar matched a post in the export.</p>}
+          ) : <p className="muted small">Every published LinkedIn post in the calendar was found in the export.</p>}
           {unmatchedLinkedin.length > 0 && (
             <p className="legend-note">{unmatchedLinkedin.length} {unmatchedLinkedin.length === 1 ? 'post' : 'posts'} in the LinkedIn export {unmatchedLinkedin.length === 1 ? 'has' : 'have'} no calendar row, so {unmatchedLinkedin.length === 1 ? 'it shows' : 'they show'} without a hook.</p>
           )}

@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
 
-function DropZone({ title, help, accept, onFile, status, ok }) {
+function DropZone({ title, help, accept, onFile, status, ok, multiple }) {
   const inputRef = useRef(null);
   const [over, setOver] = useState(false);
-  const handle = (files) => { if (files && files[0]) onFile(files[0]); };
+  const handle = (files) => { if (files && files.length) onFile(multiple ? [...files] : files[0]); };
   return (
     <label
       className={`dropzone ${over ? 'over' : ''}`}
@@ -13,7 +13,7 @@ function DropZone({ title, help, accept, onFile, status, ok }) {
     >
       <strong>{title}</strong>
       <span className="muted small">{help}</span>
-      <input ref={inputRef} type="file" accept={accept} onChange={(e) => { handle(e.target.files); e.target.value = ''; }} />
+      <input ref={inputRef} type="file" accept={accept} multiple={multiple} onChange={(e) => { handle(e.target.files); e.target.value = ''; }} />
       <span className={`status ${ok ? 'ok' : ''}`}>{status}</span>
     </label>
   );
@@ -29,15 +29,16 @@ export default function FileLoader({ onExport, onCalendar, onTags, onSample, exp
       <div className="dropzones">
         <DropZone
           title="1. LinkedIn analytics export (.xlsx)"
-          help="Required. Drag the file here or click to choose it."
+          help="Required. Drag one or more files here. Several exports are combined, since LinkedIn caps each at 50 posts."
           accept=".xlsx,.xls"
+          multiple
           onFile={onExport}
           status={exportStatus.text}
           ok={exportStatus.ok}
         />
         <DropZone
           title="2. Notion content calendar (.csv)"
-          help="Optional. Adds hooks, formats, funnel stages, and pillars."
+          help="Optional. Adds hooks, formats, funnel stages, pillars, and posts the LinkedIn export left out."
           accept=".csv,text/csv"
           onFile={onCalendar}
           status={calendarStatus.text}

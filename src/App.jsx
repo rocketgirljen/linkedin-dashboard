@@ -9,7 +9,7 @@ import PostsTable from './components/PostsTable.jsx';
 import AudienceFit from './components/AudienceFit.jsx';
 import Tagging from './components/Tagging.jsx';
 import { Notice } from './components/Section.jsx';
-import { parseXlsxFile, parseXlsxBuffer } from './lib/xlsxParser.js';
+import { parseXlsxFile, parseXlsxBuffer, mergeExports } from './lib/xlsxParser.js';
 import { parseCalendarText } from './lib/calendar.js';
 import { matchPosts } from './lib/matching.js';
 import { enrichPost, groupStats, totals, filterByRange, newestDate } from './lib/metrics.js';
@@ -54,20 +54,27 @@ export default function App() {
 
   const setStatusFor = (key, text, ok) => setStatus((s) => ({ ...s, [key]: { text, ok } }));
 
-  const handleExport = useCallback(async (file) => {
+  const handleExport = useCallback(async (fileOrFiles) => {
+    const files = Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles];
     setError(null);
     setBusy(true);
     try {
-      const parsed = await parseXlsxFile(file);
-      if (!parsed.posts.length && parsed.missingSheets.length === 5) {
-        setError(`"${file.name}" does not look like a LinkedIn analytics export. None of the expected sheets (Discovery, Engagement, Top Posts, Followers, Demographics) were found. Sheets present: ${parsed.sheetNames.join(', ')}.`);
-        setStatusFor('export', 'Could not read this file', false);
-        return;
+      const results = [];
+      for (const file of files) {
+        const parsed = await parseXlsxFile(file);
+        if (!parsed.posts.length && parsed.missingSheets.length === 5) {
+          setError(`"${file.name}" does not look like a LinkedIn analytics export. None of the expected sheets (Discovery, Engagement, Top Posts, Followers, Demographics) were found. Sheets present: ${parsed.sheetNames.join(', ')}.`);
+          setStatusFor('export', 'Could not read this file', false);
+          return;
+        }
+        results.push(parsed);
       }
-      setExportData(parsed);
-      setStatusFor('export', `Loaded ${file.name}: ${parsed.posts.length} posts`, true);
+      const merged = mergeExports(results);
+      setExportData(merged);
+      const label = files.length === 1 ? files[0].name : `${files.length} files`;
+      setStatusFor('export', `Loaded ${label}: ${merged.posts.length} ${files.length > 1 ? 'unique ' : ''}posts`, true);
     } catch (e) {
-      setError(`Could not read "${file.name}": ${e.message}`);
+      setError(`Could not read the export: ${e.message}`);
       setStatusFor('export', 'Could not read this file', false);
     } finally { setBusy(false); }
   }, []);
@@ -192,6 +199,9 @@ export default function App() {
                 {calendar?.warnings.map((w, i) => <li key={`c${i}`}>{w}</li>)}
               </ul>
             </Notice>
+          )}
+          {calendar && matched.unmatchedCalendar.length > 0 && (
+            <Notice>{matched.unmatchedCalendar.length} calendar {matched.unmatchedCalendar.length === 1 ? 'post was' : 'posts were'} not in the LinkedIn export, so {matched.unmatchedCalendar.length === 1 ? 'it uses' : 'they use'} the numbers logged in Notion. Those posts carry a "Notion numbers" label. Load more exports to cover them with LinkedIn's own numbers.</Notice>
           )}
           {!calendar && (
             <Notice>Load your Notion calendar CSV to add hooks, formats, funnel stages, and posting times. Without it the Hook Analysis and time-of-day charts stay empty.</Notice>

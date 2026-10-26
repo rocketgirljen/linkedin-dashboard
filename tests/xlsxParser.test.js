@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { parseSheets, readSample, STANDARD_SHEETS } from './helpers.js';
-import { parseXlsxBuffer, normalizeUrl } from '../src/lib/xlsxParser.js';
+import { parseXlsxBuffer, normalizeUrl, mergeExports } from '../src/lib/xlsxParser.js';
 import { parseDate, excelSerialToDate } from '../src/lib/dates.js';
 
 describe('parseWorkbook with a standard LinkedIn export', () => {
@@ -119,5 +119,31 @@ describe('helpers', () => {
     expect(parseDate('12 July 2025').getFullYear()).toBe(2025);
     expect(parseDate('nonsense')).toBeNull();
     expect(excelSerialToDate(45850).getFullYear()).toBe(2025);
+  });
+});
+
+describe('mergeExports', () => {
+  it('combines two exports and removes duplicate posts', () => {
+    const a = parseSheets(STANDARD_SHEETS);
+    const b = parseSheets({
+      ...STANDARD_SHEETS,
+      'TOP POSTS': [
+        ['Post URL', 'Post publish date', 'Engagements', null, 'Post URL', 'Post publish date', 'Impressions'],
+        ['https://www.linkedin.com/feed/update/urn:li:activity:222/', '7/2/2026', 40, null, 'https://www.linkedin.com/feed/update/urn:li:activity:333/', '7/3/2026', 9000],
+        ['https://www.linkedin.com/feed/update/urn:li:activity:333/', '7/3/2026', 70, null, 'https://www.linkedin.com/feed/update/urn:li:activity:222/', '7/2/2026', 4000],
+      ],
+      ENGAGEMENT: [['Date', 'Impressions', 'Engagements'], ['7/2/2026', 450, 20], ['7/3/2026', 600, 25]],
+    });
+    const m = mergeExports([a, b]);
+    expect(m.posts.map((p) => p.url.match(/\d+/)[0]).sort()).toEqual(['111', '222', '333']);
+    expect(m.engagement).toHaveLength(3);
+    expect(m.missingSheets).toEqual([]);
+    expect(m.notes.some((n) => n.includes('2 exports were combined'))).toBe(true);
+    expect(m.fileCount).toBe(2);
+  });
+
+  it('returns a single export unchanged', () => {
+    const a = parseSheets(STANDARD_SHEETS);
+    expect(mergeExports([a])).toBe(a);
   });
 });

@@ -40,7 +40,12 @@ function findColumn(headers, aliases) {
 // becomes ["Career Strategy", "Visibility"].
 export function stripNotionLinks(text) {
   if (!text) return [];
-  const withoutLinks = String(text).replace(/\s*\((?:https?:\/\/)?(?:www\.)?notion\.so[^)]*\)/gi, '').replace(/https?:\/\/(?:www\.)?notion\.so\S*/gi, '');
+  // Notion exports relations as "Name (https://app.notion.com/p/...)" or
+  // "Name (https://www.notion.so/...)". Remove any URL in parentheses, then
+  // any bare URL that is left.
+  const withoutLinks = String(text)
+    .replace(/\s*\(\s*(?:https?:\/\/|www\.)[^)]*\)/gi, '')
+    .replace(/(?:https?:\/\/|www\.)\S+/gi, '');
   return withoutLinks
     .split(/[,;\n]/)
     .map((s) => s.trim())
